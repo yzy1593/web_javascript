@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <script src="randominteger.js"></script>
+</head>
+<body>
+
+    <script>
+        document.write('<h2>Number Guessing Game</h2>');
+        document.write('<p>I have a number from 1 to 100, please guess what that number is. You have ten chances!</p>');
+    </script>
+    <h3>Let's begin.</h3>
+    <button id="startGameBtn">开始游戏</button>
+    
+    <script>
+        // navigator
+        console.log(navigator.userAgent);//返回当前浏览器的用户代理字符串
+        console.log(navigator.language);//返回用户的浏览器语言设置
+        console.log(navigator.platform);//返回用户的操作系统信息
+        console.log(navigator.onLine);//检查用户当前是否处于联网状态
+        navigator.geolocation.getCurrentPosition(//访问用户位置信息
+            (position) => {
+                console.log(position.coords.latitude, position.coords.longitude);
+            },
+            (error) => {
+                console.error(error.message);
+            }
+        );
+
+
+        document.getElementById('startGameBtn').addEventListener('click',startGame);
+
+        function startGame(){
+            let count=0; //重置计数
+            let number=randomInt(); //获取随机数
+            let guesses=[]; //记录猜测过的数字
+            guessNumber(number,count,guesses);
+        }
+
+        function guessNumber(number,count,guesses) {
+            let userGuess = prompt("请输入你的猜测（1-100）:");
+            userGuess = parseInt(userGuess);
+            
+            //检查用户输入是否为有效数字
+            if(isNaN(userGuess)){
+                alert("输入不正确，请输入一个整数");
+                return guessNumber(number,count,guesses);
+            }
+            if(userGuess<1||userGuess>100){
+                alert("输入不正确，请输入1-100的整数");
+                return guessNumber(number,count,guesses);
+            }
+            
+            // 记录猜测
+            guesses.push(userGuess);
+            alert("你之前猜过的数字:"+guesses.join(", "));
+
+            if(userGuess===number){
+                alert("恭喜你猜对了！数字是"+userGuess+"\n"+"你用了"+(count+1)+" 次");
+                if(confirm("想再玩一次吗？")){
+                    location.reload();
+                }
+            } else {
+                count++;
+                if(count===10){
+                    alert("游戏结束，你失败了！正确的数字是 "+number);
+                    if(confirm("想再玩一次吗？")){
+                        location.reload();
+                    }
+                }else{
+                    if(userGuess<number){
+                        alert("数字太小,你还剩余 "+(10-count)+" 次机会");
+                    }else{
+                        alert("数字太大,你还剩余 "+(10-count)+" 次机会");
+                    }
+                    return guessNumber(number, count, guesses);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
